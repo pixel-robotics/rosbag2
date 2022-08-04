@@ -142,7 +142,7 @@ void apply_resilient_storage_settings(std::unordered_map<std::string, std::strin
   }
 }
 
-constexpr const auto FILE_EXTENSION = ".db3";
+constexpr const auto FILE_EXTENSION = "db3";
 
 // Minimum size of a sqlite3 database file in bytes (84 kiB).
 constexpr const uint64_t MIN_SPLIT_FILE_SIZE = 86016;
@@ -168,7 +168,7 @@ void SqliteStorage::open(
   }
 
   if (is_read_write(io_flag)) {
-    relative_path_ = storage_options.uri + FILE_EXTENSION;
+    relative_path_ = storage_options.uri + "." + FILE_EXTENSION;
 
     // READ_WRITE requires the DB to not exist.
     if (rcpputils::fs::path(relative_path_).exists()) {
@@ -445,6 +445,11 @@ void SqliteStorage::fill_topics_and_types()
 std::string SqliteStorage::get_storage_identifier() const
 {
   return "sqlite3";
+}
+
+std::string SqliteStorage::get_file_extension() const
+{
+  return FILE_EXTENSION;
 }
 
 std::string SqliteStorage::get_relative_file_path() const
