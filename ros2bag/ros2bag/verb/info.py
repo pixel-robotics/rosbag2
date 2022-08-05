@@ -26,11 +26,5 @@ class InfoVerb(VerbExtension):
         add_standard_reader_args(parser)
 
     def main(self, *, args):  # noqa: D102
-        try:
-            m = Info().read_metadata(args.bag_path, args.storage)
-            print(m)
-        except RuntimeError:
-            return ('Could not read metadata for {}.'
-                    'Please specify the path to the folder containing '
-                    "an existing 'metadata.yaml' file or provide correct storage id "
-                    "if metadata file doesn't exist (see help).".format(args.bag_path))
+        m = Info().read_metadata(args.bag_path, args.storage)
+        print(m)

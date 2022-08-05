@@ -57,7 +57,7 @@ public:
    * Used for clues when guessing plugin to use, if omitted some functionality may fail to
    * automatically choose this plugin.
    *
-   * \returns the storage file extension, excluding the dot
+   * \returns the storage file extension, including its initial dot (e.g. ".storage")
    */
   virtual std::string get_file_extension() const { return ""; };
 };
