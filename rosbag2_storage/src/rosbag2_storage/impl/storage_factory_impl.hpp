@@ -65,8 +65,8 @@ try_detect_and_open_storage(
     std::shared_ptr<InterfaceT> instance;
     auto unmanaged_instance = class_loader->createUnmanagedInstance(registered_class);
     if (!use_extension || unmanaged_instance->get_file_extension() == input_extension) {
-      ROSBAG2_STORAGE_LOG_INFO_STREAM("Checking storage implementation '" << registered_class
-        << "' to open bag.");
+      ROSBAG2_STORAGE_LOG_INFO_STREAM(
+        "Checking storage implementation '" << registered_class << "' to open bag.");
       try {
         instance = std::shared_ptr<InterfaceT>(unmanaged_instance);
       } catch (const std::runtime_error & ex) {
@@ -76,6 +76,8 @@ try_detect_and_open_storage(
       }
       try {
         instance->open(storage_options, flag);
+        ROSBAG2_STORAGE_LOG_INFO_STREAM(
+          "Success, using implementation '" << registered_class << "'.");
         return instance;
       } catch (const std::runtime_error & ex) {
         continue;
