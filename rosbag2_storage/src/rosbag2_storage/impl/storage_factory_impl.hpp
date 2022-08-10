@@ -49,20 +49,18 @@ template<
   storage_interfaces::IOFlag flag = StorageTraits<InterfaceT>::io_flag
 >
 std::shared_ptr<InterfaceT>
-detect_and_open_storage(
+try_detect_and_open_storage(
   std::shared_ptr<pluginlib::ClassLoader<InterfaceT>> class_loader,
   const StorageOptions & storage_options)
 {
   auto uri = rcpputils::fs::path{storage_options.uri};
   auto input_extension = uri.extension().string();
-  printf("Trying to open a %s\n", input_extension.c_str());
 
   // In a mode where we create a file, "just try open" will succeed and create a file,
   // not necessarily with the desired implementation.
   bool use_extension = flag == storage_interfaces::IOFlag::READ_WRITE;
 
   const auto & registered_classes = class_loader->getDeclaredClasses();
-  printf("There are %zu extensions\n", registered_classes.size());
   for (const auto & registered_class : registered_classes) {
     std::shared_ptr<InterfaceT> instance;
     auto unmanaged_instance = class_loader->createUnmanagedInstance(registered_class);
@@ -78,11 +76,8 @@ detect_and_open_storage(
       }
       try {
         instance->open(storage_options, flag);
-        ROSBAG2_STORAGE_LOG_WARN_STREAM("Opened successfully - now what?");
         return instance;
       } catch (const std::runtime_error & ex) {
-        ROSBAG2_STORAGE_LOG_ERROR_STREAM(
-          "Failed to open '" << uri << "' with implementation '" << registered_class << "'");
         continue;
       }
     }
@@ -100,7 +95,7 @@ get_interface_instance(
   const StorageOptions & storage_options)
 {
   if (storage_options.storage_id.empty()) {
-    return detect_and_open_storage(class_loader, storage_options);
+    return try_detect_and_open_storage<InterfaceT, flag>(class_loader, storage_options);
   }
 
   const auto & registered_classes = class_loader->getDeclaredClasses();
@@ -173,11 +168,11 @@ public:
 
   std::shared_ptr<ReadOnlyInterface> open_read_only(const StorageOptions & storage_options)
   {
-    // try to load the instance as read_only interface
+    // try all registered ReadOnly plugins first
     auto instance = get_interface_instance(
       read_only_class_loader_, storage_options);
 
-    // try to load as read_write if not successful
+    // try ReadWrite plugins if no ReadOnly plugin was found
     if (instance == nullptr) {
       instance = get_interface_instance<ReadWriteInterface, storage_interfaces::IOFlag::READ_ONLY>(
         read_write_class_loader_, storage_options);
