@@ -168,7 +168,12 @@ void SqliteStorage::open(
   }
 
   if (is_read_write(io_flag)) {
-    relative_path_ = storage_options.uri + FILE_EXTENSION;
+    const auto extension = rcpputils::fs::path(storage_options.uri).extension().string();
+    if (extension == FILE_EXTENSION) {
+      relative_path_ = storage_options.uri;
+    } else {
+      relative_path_ = storage_options.uri + FILE_EXTENSION;
+    }
 
     // READ_WRITE requires the DB to not exist.
     if (rcpputils::fs::path(relative_path_).exists()) {
