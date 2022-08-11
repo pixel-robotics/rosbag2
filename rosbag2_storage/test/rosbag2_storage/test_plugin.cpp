@@ -110,6 +110,11 @@ std::string TestPlugin::get_storage_identifier() const
   return test_constants::READ_WRITE_PLUGIN_IDENTIFIER;
 }
 
+std::string TestPlugin::get_file_extension() const
+{
+  return test_constants::READ_WRITE_PLUGIN_EXTENSION;
+}
+
 uint64_t TestPlugin::get_minimum_split_file_size() const
 {
   std::cout << "\nreturning minimum split file size\n";

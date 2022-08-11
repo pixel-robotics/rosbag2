@@ -51,6 +51,15 @@ public:
    * \returns the identifier.
    */
   virtual std::string get_storage_identifier() const = 0;
+
+  /**
+   * Get the file extension that this storage implementation uses for its output files.
+   * Used for clues when guessing plugin to use, if omitted some functionality may fail to
+   * automatically choose this plugin.
+   *
+   * \returns the storage file extension, including its initial dot (e.g. ".storage")
+   */
+  virtual std::string get_file_extension() const { return ""; };
 };
 
 }  // namespace storage_interfaces
