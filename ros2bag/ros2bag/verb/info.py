@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-import os
-
 from ros2bag.api import add_standard_reader_args
 from ros2bag.verb import VerbExtension
 from rosbag2_py._info import Info

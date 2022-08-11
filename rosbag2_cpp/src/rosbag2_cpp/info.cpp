@@ -37,7 +37,7 @@ rosbag2_storage::BagMetadata Info::read_metadata(
   auto storage = factory.open_read_only({uri, storage_id});
   if (!storage) {
     throw std::runtime_error(
-      "The metadata.yaml file does not exist and the bag could not be opened.");
+            "The metadata.yaml file does not exist and the bag could not be opened.");
   }
   return storage->get_metadata();
 }

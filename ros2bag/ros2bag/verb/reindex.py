@@ -27,7 +27,7 @@ from ros2bag.api import (
     print_error,
 )
 from ros2bag.verb import VerbExtension
-from rosbag2_py import get_registered_readers, Reindexer, StorageOptions
+from rosbag2_py import Reindexer, StorageOptions
 
 
 class ReindexVerb(VerbExtension):
