@@ -104,7 +104,7 @@ void SequentialReader::open(
   } else {
     storage_ = storage_factory_->open_read_only(storage_options_);
     if (!storage_) {
-      throw std::runtime_error{"No storage could be initialized from the arguments."};
+      throw std::runtime_error{"No storage could be initialized from the inputs."};
     }
     metadata_ = storage_->get_metadata();
     if (metadata_.relative_file_paths.empty()) {

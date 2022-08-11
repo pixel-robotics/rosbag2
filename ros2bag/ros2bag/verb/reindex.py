@@ -37,8 +37,6 @@ class ReindexVerb(VerbExtension):
         add_standard_reader_args(parser)
 
     def main(self, *, args):
-        # TODO(emersonknapp) - this could work on non-directories and spit out a metadata.yaml
-        # file that could be of use to people. Maybe add a -o option for optional place to put it
         if not os.path.isdir(args.bag_path):
             return print_error('Must specify a bag directory')
 

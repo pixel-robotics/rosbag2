@@ -56,32 +56,33 @@ try_detect_and_open_storage(
   auto uri = rcpputils::fs::path{storage_options.uri};
   auto input_extension = uri.extension().string();
 
-  // In a mode where we create a file, "just try open" will succeed and create a file,
-  // not necessarily with the desired implementation.
-  bool use_extension = flag == storage_interfaces::IOFlag::READ_WRITE;
-
   const auto & registered_classes = class_loader->getDeclaredClasses();
   for (const auto & registered_class : registered_classes) {
     std::shared_ptr<InterfaceT> instance;
-    auto unmanaged_instance = class_loader->createUnmanagedInstance(registered_class);
-    if (!use_extension || unmanaged_instance->get_file_extension() == input_extension) {
+    try {
+      auto unmanaged_instance = class_loader->createUnmanagedInstance(registered_class);
+      instance = std::shared_ptr<InterfaceT>(unmanaged_instance);
+    } catch (const std::runtime_error & ex) {
+      ROSBAG2_STORAGE_LOG_ERROR_STREAM(
+        "Unable to load plugin: " << ex.what());
+      continue;
+    }
+
+    bool creating_file = flag == storage_interfaces::IOFlag::READ_WRITE;
+    bool extension_matches = instance->get_file_extension() == input_extension;
+    if (creating_file && !extension_matches) {
+      continue;
+    }
+
+    ROSBAG2_STORAGE_LOG_INFO_STREAM(
+      "Checking storage implementation '" << registered_class << "' to open bag.");
+    try {
+      instance->open(storage_options, flag);
       ROSBAG2_STORAGE_LOG_INFO_STREAM(
-        "Checking storage implementation '" << registered_class << "' to open bag.");
-      try {
-        instance = std::shared_ptr<InterfaceT>(unmanaged_instance);
-      } catch (const std::runtime_error & ex) {
-        ROSBAG2_STORAGE_LOG_ERROR_STREAM(
-          "Unable to load instance of read write interface: " << ex.what());
-        continue;
-      }
-      try {
-        instance->open(storage_options, flag);
-        ROSBAG2_STORAGE_LOG_INFO_STREAM(
-          "Success, using implementation '" << registered_class << "'.");
-        return instance;
-      } catch (const std::runtime_error & ex) {
-        continue;
-      }
+        "Success, using implementation '" << registered_class << "'.");
+      return instance;
+    } catch (const std::runtime_error & ex) {
+      continue;
     }
   }
   return nullptr;
@@ -101,8 +102,6 @@ get_interface_instance(
   }
 
   const auto & registered_classes = class_loader->getDeclaredClasses();
-
-  printf("There are %zu storage plugins\n", registered_classes.size());
   auto class_exists = std::find(
     registered_classes.begin(),
     registered_classes.end(), storage_options.storage_id);
