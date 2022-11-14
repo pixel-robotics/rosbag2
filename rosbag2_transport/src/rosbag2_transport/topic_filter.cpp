@@ -127,8 +127,8 @@ bool TopicFilter::take_topic(
   }
 
   if (!record_options_.include_hidden_topics && topic_is_hidden(topic_name)) {
-    ROSBAG2_TRANSPORT_LOG_WARN_STREAM(
-      "Hidden topics are not recorded. Enable them with --include-hidden-topics");
+    // ROSBAG2_TRANSPORT_LOG_WARN_STREAM(
+    //   "Hidden topics are not recorded. Enable them with --include-hidden-topics");
     return false;
   }
 
