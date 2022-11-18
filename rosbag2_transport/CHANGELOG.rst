@@ -124,7 +124,7 @@ Changelog for package rosbag2_transport
 * use rclcpp logging macros (`#715 <https://github.com/ros2/rosbag2/issues/715>`_)
 * use rclcpp::Node for generic pub/sub (`#714 <https://github.com/ros2/rosbag2/issues/714>`_)
 * PlayerClock initial implementation - Player functionally unchanged (`#689 <https://github.com/ros2/rosbag2/issues/689>`_)
-* Fix bad_function_call by replacing rclcpp::spin_some with SingleThreadedExecutor (`#705 <https://github.com/ros2/rosbag2/issues/705>`_)
+* Fix bad_function_call by replacing rclcpp::spin_some with EventsExecutor (`#705 <https://github.com/ros2/rosbag2/issues/705>`_)
 * rosbag2_py pybind wrapper for "record" - remove rosbag2_transport_py (`#702 <https://github.com/ros2/rosbag2/issues/702>`_)
 * Add rosbag2_py::Player::play to replace rosbag2_transport_python version (`#693 <https://github.com/ros2/rosbag2/issues/693>`_)
 * Fix and clarify logic in test_play filter test (`#690 <https://github.com/ros2/rosbag2/issues/690>`_)

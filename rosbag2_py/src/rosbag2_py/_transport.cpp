@@ -19,7 +19,8 @@
 #include <unordered_map>
 #include <utility>
 #include <vector>
-
+#include "rclcpp/executors/events_executor/events_executor.hpp"
+#include "rclcpp/rclcpp.hpp"
 #include "rosbag2_storage/storage_options.hpp"
 #include "rosbag2_storage/yaml.hpp"
 #include "rosbag2_transport/bag_rewrite.hpp"
@@ -126,7 +127,7 @@ public:
     auto player = std::make_shared<rosbag2_transport::Player>(
       std::move(reader), storage_options, play_options);
 
-    rclcpp::executors::SingleThreadedExecutor exec;
+    rclcpp::executors::EventsExecutor exec;
     exec.add_node(player);
     auto spin_thread = std::thread(
       [&exec]() {
@@ -142,13 +143,13 @@ public:
 class Recorder
 {
 private:
-  std::unique_ptr<rclcpp::executors::SingleThreadedExecutor> exec_;
+  std::unique_ptr<rclcpp::executors::EventsExecutor> exec_;
 
 public:
   Recorder()
   {
     rclcpp::init(0, nullptr);
-    exec_ = std::make_unique<rclcpp::executors::SingleThreadedExecutor>();
+    exec_ = std::make_unique<rclcpp::executors::EventsExecutor>();
     std::signal(
       SIGTERM, [](int /* signal */) {
         rclcpp::shutdown();

@@ -21,6 +21,7 @@ if(BUILD_ROSBAG2_BENCHMARKS)
   find_package(rmw REQUIRED)
   find_package(std_msgs REQUIRED)
   find_package(yaml_cpp_vendor REQUIRED)
+  find_package(irobot_events_executor REQUIRED)
 
   add_executable(writer_benchmark
     src/config_utils.cpp
@@ -37,6 +38,7 @@ if(BUILD_ROSBAG2_BENCHMARKS)
     src/results_writer.cpp)
 
   ament_target_dependencies(writer_benchmark
+    irobot_events_executor
     rclcpp
     std_msgs
     rosbag2_compression
@@ -46,6 +48,7 @@ if(BUILD_ROSBAG2_BENCHMARKS)
   )
 
   ament_target_dependencies(benchmark_publishers
+  irobot_events_executor
     rclcpp
     rosbag2_storage
     std_msgs
@@ -53,6 +56,7 @@ if(BUILD_ROSBAG2_BENCHMARKS)
   )
 
   ament_target_dependencies(results_writer
+  irobot_events_executor
     rclcpp
     rosbag2_storage
   )

@@ -24,6 +24,8 @@ if(WIN32 AND CMAKE_BUILD_TYPE STREQUAL "Debug")
   set(Python3_EXECUTABLE "${PYTHON_EXECUTABLE_DEBUG}")
 endif()
 
+find_package(irobot_events_executor REQUIRED)
+find_package(rclcpp REQUIRED)
 find_package(ament_cmake REQUIRED)
 find_package(ament_cmake_python REQUIRED)
 find_package(ament_cmake_ros REQUIRED)
@@ -44,6 +46,8 @@ pybind11_add_module(_reader SHARED
   src/rosbag2_py/_reader.cpp
 )
 ament_target_dependencies(_reader PUBLIC
+    irobot_events_executor
+    rclcpp
   "rosbag2_compression"
   "rosbag2_cpp"
   "rosbag2_storage"
@@ -54,6 +58,8 @@ pybind11_add_module(_storage SHARED
   src/rosbag2_py/format_bag_metadata.cpp
 )
 ament_target_dependencies(_storage PUBLIC
+    irobot_events_executor
+    rclcpp
   "rosbag2_cpp"
   "rosbag2_storage"
 )
@@ -62,6 +68,8 @@ pybind11_add_module(_writer SHARED
   src/rosbag2_py/_writer.cpp
 )
 ament_target_dependencies(_writer PUBLIC
+    irobot_events_executor
+    rclcpp
   "rosbag2_compression"
   "rosbag2_cpp"
   "rosbag2_storage"
@@ -71,6 +79,8 @@ pybind11_add_module(_info SHARED
   src/rosbag2_py/_info.cpp
 )
 ament_target_dependencies(_info PUBLIC
+    irobot_events_executor
+    rclcpp
   "rosbag2_cpp"
   "rosbag2_storage"
 )
@@ -79,6 +89,8 @@ pybind11_add_module(_transport SHARED
   src/rosbag2_py/_transport.cpp
 )
 ament_target_dependencies(_transport PUBLIC
+    irobot_events_executor
+    rclcpp
   "rosbag2_compression"
   "rosbag2_cpp"
   "rosbag2_storage"
@@ -89,6 +101,8 @@ pybind11_add_module(_reindexer SHARED
   src/rosbag2_py/_reindexer.cpp
 )
 ament_target_dependencies(_reindexer PUBLIC
+    irobot_events_executor
+    rclcpp
   "rosbag2_cpp"
   "rosbag2_storage"
 )

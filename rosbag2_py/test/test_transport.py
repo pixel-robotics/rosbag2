@@ -67,7 +67,7 @@ def test_record_cancel(tmp_path):
     record_thread.start()
 
     node = rclpy.create_node('test_record_cancel')
-    executor = rclpy.executors.SingleThreadedExecutor()
+    executor = rclpy.executors.EventsExecutor()
     executor.add_node(node)
     pub = node.create_publisher(String, 'chatter', 10)
 
