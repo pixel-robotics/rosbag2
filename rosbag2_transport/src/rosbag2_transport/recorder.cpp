@@ -241,7 +241,16 @@ bool Recorder::is_paused()
 
 void Recorder::topics_discovery()
 {
+  auto start = this->get_clock()->now();
+  // Todo: make this a parameter
+  auto timeout = 5; // seconds
   while (rclcpp::ok() && stop_discovery_ == false) {
+    if(this->get_clock()->now() - start > rclcpp::Duration(timeout, 0)){
+      RCLCPP_INFO(
+        this->get_logger(),
+        "Stopping auto-discovery because timeout is reached");
+      return;
+    }
     auto topics_to_subscribe =
       get_requested_or_available_topics();
     for (const auto & topic_and_type : topics_to_subscribe) {
